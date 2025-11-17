@@ -138,7 +138,7 @@ if osver == "Darwin":
 
 	if len(sys.argv) < 2:
 		if not scriptroot.startswith("/Volumes/"):
-			prbad("Error 01: Couldn't find Nintendo 3DS folder! Ensure that you are running this script from the root of the SD card.")
+			prbad("Erreur 01: Impossible de trouver le dossier "Nintendo 3DS"! Assurez-vous que vous executez le script depuis la racine de la carte SD.")
 			# should we add some macos specific message?
 			exitOnEnter()
 
@@ -154,11 +154,11 @@ if osver == "Darwin":
 				device = devpath
 				break
 		if device is None:
-			#prbad("Error :")
-			prbad("Can't find matching device, this shouldn't happen...")
+			#prbad("Erreur :")
+			prbad("Impossible de trouver un appareil compatible...")
 			exitOnEnter()
 
-		prinfo("Finding previous temporary folder...")
+		prinfo("Recherche du dossier temporaire précédent...")
 		import shutil, tempfile, time
 		systmp = tempfile.gettempdir()
 		tmpdir = None
@@ -172,16 +172,16 @@ if osver == "Darwin":
 				else:
 					shutil.rmtree(dirpath)
 		if tmpdir is None:
-			prinfo("Creating temporary folder...")
+			prinfo("Création d'un dossier temporaire...")
 			tmpdir = tempfile.mkdtemp(prefix=tmpprefix)
 			shutil.copyfile(thisfile, f"{tmpdir}/mset9.py")
 
-		prinfo("Trying to unmount SD card...")
+		prinfo("Nous essayons d'éjecter la carte SD...")
 		ret = run_diskutil_and_wait(["umount", "force"], device)
 
 		if ret == 1:
-			prbad("Error 16: Unable to unmount SD card.")
-			prinfo("Please ensure there's no other app using your SD card.")
+			prbad("Erreur 16: Impossible d'éjecter la carte SD.")
+			prinfo("S'il vous plai assurez-vous qu'aucun logiciel n'utilise vôtre carte SD.")
 			#tmp_cleanup()
 			exitOnEnter()
 
@@ -192,9 +192,9 @@ if osver == "Darwin":
 	if len(sys.argv) == 3:
 		systmp = sys.argv[2]
 	if not os.path.exists(device):
-		prbad("Error 13: Device doesn't exist.")
-		prinfo("Ensure your SD card is inserted properly.")
-		prinfo("Also, don't eject SD card itself in disk utility, unmount the partition only.")
+		prbad("Erreur 13: L'appareil n'existe pas.")
+		prinfo("Assurez-vous que vôtre carte SD est insérée correctement.")
+		prinfo("De plus, ne retirez pas la carte SD elle-même via l'Utilitaire de disque, éjectez uniquement la partition..")
 		#tmp_cleanup()
 		exitOnEnter()
 
@@ -209,7 +209,7 @@ if osver == "Darwin":
 		try:
 			result = subprocess.run(["ldid", "-e", path], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
 			if result.returncode != 0:
-				prbad("Error #: Fail to check venv python ios entitlement")
+				prbad("Erreur #: Échec de la vérification de l’entitlement iOS du Python dans l’environnement virtuel (venv).")
 				prinfo(f"ldid error (ret={result.returncode})")
 				tmp_cleanup()
 				exitOnEnter()
@@ -264,13 +264,13 @@ if osver == "Darwin":
 			args = ["ldid", "-M", f"-S{entaddxml}", path]
 			result = subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
 			if result.returncode != 0:
-				prbad("Error #: Fail to modify venv python ios entitlement")
+				prbad("Erreur #: Échec de la modification de l’entitlement iOS du Python dans l’environnement virtuel (venv)")
 				prinfo(f"ldid ret={result.returncode}")
 				prinfo("Message:")
 				prinfo(result.stderr)
 
 		except FileNotFoundError:
-			prbad("Error #: Fail to modify venv python ios entitlement")
+			prbad("Erreur #: Échec de la modification de l’entitlement iOS du Python dans l’environnement virtuel (venv)")
 			prinfo("wtf? ldid disappeared?")
 			tmp_cleanup()
 			exitOnEnter()
@@ -320,17 +320,17 @@ if osver == "Darwin":
 		elif is_ios():
 			have_perm = check_ios_py_entitlement(sys.executable)
 			if have_perm == None:
-				prinfo("ldid not found, assume your python have proper entitlement")
-				prinfo("if fail later, please install ldid or fix your python manually")
-				prinfo("(require entitlement com.apple.private.security.disk-device-access)")
+				prinfo("ldid introuvable, nous supposons que vôtre Python possède les bons entitlements")
+				prinfo("Si cela se reproduit plus tard, veuillez installer ldid ou fixer manuellement vôtre Python")
+				prinfo("(entitlement requis: com.apple.private.security.disk-device-access)")
 			elif not have_perm:
-				prinfo("need entitlement fix, setting up venv for fixing automatically...")
+				prinfo("Entitlement manquant, configuration automatique de venv pour la correction...")
 				setup_venv()
 
 	try:
 		from pyfatfs.PyFatFS import PyFatFS
 	except ModuleNotFoundError:
-		prinfo("PyFatFS not found, setting up venv for installing automatically...")
+		prinfo("PyFatFS est introuvable, configuration de venv pour l'installation automatique...")
 		setup_venv()
 		from pyfatfs.PyFatFS import PyFatFS
 
@@ -348,13 +348,13 @@ if osver == "Darwin":
 		#])
 		#try:
 		#	os.execlp("osascript", "osascript", "-e", osascript)
-		prinfo("Input the password of your computer if prompted.")
-		prinfo("(It won't show anything while you're typing, just type it blindly)")
+		prinfo("Tapez le mot de passe de vôtre ordinateur si il est demandé.")
+		prinfo("(Rien ne s'affichera pendant que vous taperez le mot de passe, vous devez le taper à l'aveugle, veuillez donc à ne pas faire de fautes)")
 		try:
 			import tempfile
 			os.execlp("sudo", "sudo", sys.executable, thisfile, device, tempfile.gettempdir())
 		except:
-			prbad("Error 17: Root privilege is required.")
+			prbad("Erreur 17: Des privilèges administrateurs sont requis.")
 			#tmp_cleanup()
 			exitOnEnter(remount=True)
 
@@ -495,16 +495,16 @@ if osver == "Darwin":
 	except PyFATException as e:
 		msg = str(e)
 		if "Cannot open" in msg:
-			prbad("Error 14: Can't open device.")
-			prinfo("Please ensure your SD card is unmounted in disk utility.")
+			prbad("Erreur 14: Impossible d'ouvrir l'appareil.")
+			prinfo("Veuillez vous assurer que votre carte SD est éjectée dans l’Utilitaire de disque.")
 			if is_ios():
-				prinfo("might also be ios entitlement issue")
-				prinfo("please install ldid or fix your python manually")
-				prinfo("(require entitlement com.apple.private.security.disk-device-access)")
+				prinfo("Cela pourait aussi être une erreur avec l'entitlement iOS")
+				prinfo("S'il vous plai installez ldid ou fixez vôtre Python manuellement")
+				prinfo("(nécessite l’entitlement com.apple.private.security.disk-device-access)")
 		elif "Invalid" in msg:
-			prbad("Error 15: Not FAT32 formatted or corrupted filesystem.")
-			prinfo("Please ensure your SD card is properly formatted")
-			prinfo("Consult: https://wiki.hacks.guide/wiki/Formatting_an_SD_card")
+			prbad("Erreur 15: Pas formaté en FAT32 ou système de fichiers corrompu.")
+			prinfo("S'il vous plai assurez-vous que vôtre carte sd est correctrement insérée")
+			prinfo("Consultez: translate.yandex.com/translate?view=compact&url=https%3A%2F%2Fwiki.hacks.guide%2Fwiki%2FFormatting_an_SD_card&lang=en-fr&gcp=1gw000t5zciu")
 		#tmp_cleanup()
 		exitOnEnter()
 
@@ -515,7 +515,7 @@ if osver == "Darwin":
 		global fs, device
 		fs.close()
 		if remount and not is_ios():
-			prinfo("Trying to remount SD card...")
+			prinfo("Nous essayons de remonter la carte SD...")
 			run_diskutil_and_wait("mount", device)
 		#tmp_cleanup()
 
@@ -568,7 +568,7 @@ else:
 			try:
 				os.chdir(self.root)
 			except Exception:
-				prbad("Error 08: Couldn't reapply working directory, is SD card reinserted?")
+				prbad("Erreur 08: Impossible de rétablir le répertoire de travail, la carte SD a-t-elle été réinsérée ?")
 				exitOnEnter()
 		def print_root(self):
 			prinfo(f"Current dir: {self.root}")
@@ -607,7 +607,7 @@ def getInput(options):
 
 # Section: insureRoot
 if not fs.exists("Nintendo 3DS/"):
-	prbad("Error 01: Couldn't find Nintendo 3DS folder! Ensure that you are running this script from the root of the SD card.")
+	prbad("Erreur 01: Impossible de trouver le dossiez "Nintendo 3DS"! Assurez-vous que vous êtes en train d'éxecuter le script depuis la racine de vôtre carte sd.")
 	prbad("If that doesn't work, eject the SD card, and put it back in your console. Turn it on and off again, then rerun this script.")
 	fs.print_root()
 	exitOnEnter()
