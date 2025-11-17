@@ -100,7 +100,7 @@ def dig_for_root():
 
 			f.write("\"Ques-ce que la racine de ma carte SD'...?\"\n")
 			f.write("C'est le début de la carte, elle n'est dans aucun fichier'.\n")
-			f.write("C'est l'endroit où vous pouvez voir le dossier "Nintendo 3DS". (Pas à l'interieur même du fichier Nintendo 3DS!)\n\n")
+			f.write("C'est l'endroit où vous pouvez voir le dossier Nintendo3DS. (Pas à l'interieur même du fichier Nintendo 3DS!)\n\n")
 
 			f.write("Image de référence: https://3ds.hacks.guide/images/screenshots/onboarding/sdroot.png\n\n")
 
@@ -138,7 +138,7 @@ if osver == "Darwin":
 
 	if len(sys.argv) < 2:
 		if not scriptroot.startswith("/Volumes/"):
-			prbad("Erreur 01: Impossible de trouver le dossier "Nintendo 3DS"! Assurez-vous que vous executez le script depuis la racine de la carte SD.")
+			prbad("Erreur 01: Impossible de trouver le dossier Nintendo3DS! Assurez-vous que vous executez le script depuis la racine de la carte SD.")
 			# should we add some macos specific message?
 			exitOnEnter()
 
@@ -607,7 +607,7 @@ def getInput(options):
 
 # Section: insureRoot
 if not fs.exists("Nintendo 3DS/"):
-	prbad("Erreur 01: Impossible de trouver le dossiez "Nintendo 3DS"! Assurez-vous que vous êtes en train d'éxecuter le script depuis la racine de vôtre carte sd.")
+	prbad("Erreur 01: Impossible de trouver le dossiez Nintendo3DS! Assurez-vous que vous êtes en train d'éxecuter le script depuis la racine de vôtre carte sd.")
 	prbad("If that doesn't work, eject the SD card, and put it back in your console. Turn it on and off again, then rerun this script.")
 	fs.print_root()
 	exitOnEnter()
